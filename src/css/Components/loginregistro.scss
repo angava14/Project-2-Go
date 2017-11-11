@@ -1,0 +1,31 @@
+
+
+.login{
+    display:flex;
+    align-items:center;
+    flex-direction: column;
+    justify-content:center;
+    margin: 0% 35% 0 35%;
+    
+    
+}
+
+.selectfield{
+    margin-top: 7%;
+    height: 50px;
+    width: 70%;
+    font-size: medium;
+    display: flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.cardloginregistro{
+    margin-top: 5%;
+}
+    .botoncard{
+        height:45px;
+        width:130px;
+        margin:40px 25% 10px 25%;
+        flex: 0 1 auto;
+    }
