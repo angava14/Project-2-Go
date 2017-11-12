@@ -59,7 +59,7 @@ guardarid(){
     iconElementRight={<div >
     <FlatButton style={itemcolor} label="Inicio" href="/" />
     <FlatButton style={itemcolor} label="Mi Perfil" href="/perfil"  onClick={() => this.guardarid()}/>
-    <FlatButton style={itemcolor} label="Proyectos" href="/proyectos"/>
+    <FlatButton style={itemcolor} label="Mis Proyectos" href="/misproyectos"/>
     <FlatButton style={itemcolor} label="Logout" onClick={() => this.lout()} />
     </div>}
   />

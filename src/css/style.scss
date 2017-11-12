@@ -1,12 +1,6 @@
 @import 'Components/nav';
-@import 'Components/header';
-@import 'Components/footer';
-@import 'Components/main';
 @import 'Components/loginregistro';
 @import 'Components/perfil';
-@import 'Components/usuarios';
-@import 'Components/formato';
-@import 'Components/editarformato';
 .reset, body {
   margin: 0;
   padding: 0; }
@@ -15,4 +9,26 @@
     padding:0;
     font-family: 'Roboto', sans-serif;
    
+}
+
+.tituloproyectos{
+  margin: 3% 0% 3% 0%;
+  display:flex;
+  justify-content:center ;
+}
+
+
+.tabla{
+    width: 80%;
+    margin-left: 10% ;
+    margin-right: 10%;
+    
+}
+
+.cardsproyectos{
+    display:flex;
+    align-items:center;
+    flex-direction: column;
+    justify-content:center;
+    margin: 0% 20% 5% 20%;
 }

@@ -98,4 +98,27 @@ export function getToken(){
 }
 
 
+export function crearnuevoproyecto(objeto){
+   const messagesRef = firebase.database().ref().child('usuarios/'+objeto.id+'/proyectos/');
+  const proyecto ={
+     nombre: objeto.nombre,
+     descripcion: objeto.descripcion,
+   }
+   const temp =  messagesRef.push(proyecto);
+   const key  = temp.key;
+   console.log(key);
+    
+  
+  
+  const Ref = firebase.database().ref().child('proyectos/'+ key);
+  const proyect ={
+     descripcion: objeto.descripcion,
+     autor: objeto.id,
+     nombre: objeto.nombre ,
+     nombrecreador: objeto.nombrecreador , 
+   }
+     Ref.set(proyect);
+    
+}
+
 
