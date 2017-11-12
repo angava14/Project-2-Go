@@ -17,6 +17,18 @@ const carddiv ={
 	width: '100%'
 }
 
+const styles={
+  mediumIcon: {
+    width: 48,
+    height: 48,
+  }
+}
+
+const iconbutton ={
+    padding: 0 
+}
+
+
 class Home extends React.Component {
 
     constructor (props) {

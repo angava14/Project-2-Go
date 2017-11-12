@@ -122,3 +122,28 @@ export function crearnuevoproyecto(objeto){
 }
 
 
+export function uploadDocument(archivo , nombrearchivo , idcreador , idproyecto){
+ 
+         var storageRef = firebase.storage().ref(idcreador+"/proyectos/"+idproyecto+"/"+nombrearchivo);
+        var uploadTask = storageRef.put(archivo);
+ 
+ 
+        uploadTask.on('state_changed', function(snapshot){
+            
+            
+        }, function(error){
+            
+        } , function(){
+            var downloadURL = uploadTask.snapshot.downloadURL;
+            
+            const imageRef = firebase.database().ref().child('proyectos/'+idproyecto+'/archivos/');
+            const newImage = {
+                link: downloadURL,
+                name: nombrearchivo
+            }
+            
+          imageRef.push(newImage);
+          
+        });
+        
+}
