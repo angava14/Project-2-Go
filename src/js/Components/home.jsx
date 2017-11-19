@@ -14,19 +14,11 @@ const card ={
 }
 
 const carddiv ={
-	width: '100%'
+	width: '100%',
+	backgroundColor: "rgb(168,229,251)"
 }
 
-const styles={
-  mediumIcon: {
-    width: 48,
-    height: 48,
-  }
-}
 
-const iconbutton ={
-    padding: 0 
-}
 
 
 class Home extends React.Component {

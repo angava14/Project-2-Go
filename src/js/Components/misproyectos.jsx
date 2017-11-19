@@ -224,7 +224,7 @@ verproyecto(id){
           iconButtonElement={<IconButton><Arrow /></IconButton>}
           value={this.state.menu}
         >
-          <MenuItem value={2} primaryText="Ver Perfil" onClick={() => this.verproyecto(item.id) }  />
+          <MenuItem value={2} primaryText="Ver Proyecto" onClick={() => this.verproyecto(item.id) }  />
           <MenuItem value={3} primaryText="Eliminar"/>
         
         </IconMenu>

@@ -313,6 +313,7 @@
 	exports.getToken = getToken;
 	exports.crearnuevoproyecto = crearnuevoproyecto;
 	exports.uploadDocument = uploadDocument;
+	exports.añadircolaborador = añadircolaborador;
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
 
@@ -436,6 +437,14 @@
 
 	    imageRef.push(newImage);
 	  });
+	}
+
+	function añadircolaborador(idusuario, idproyecto, nombrecolaborador) {
+	  var messagesRef = firebase.database().ref().child('proyectos/' + idproyecto + "/colaboradores/" + idusuario);
+	  var objeto = {
+	    nombre: nombrecolaborador
+	  };
+	  messagesRef.update(objeto);
 	}
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/ubuntu/workspace/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "config.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
@@ -64274,18 +64283,8 @@
 	};
 
 	var carddiv = {
-	  width: '100%'
-	};
-
-	var styles = {
-	  mediumIcon: {
-	    width: 48,
-	    height: 48
-	  }
-	};
-
-	var iconbutton = {
-	  padding: 0
+	  width: '100%',
+	  backgroundColor: "rgb(168,229,251)"
 	};
 
 	var Home = (function (_React$Component) {
@@ -72361,7 +72360,7 @@
 	                                                            ),
 	                                                            value: _this.state.menu
 	                                                        },
-	                                                        React.createElement(_materialUiMenuItem2['default'], { value: 2, primaryText: 'Ver Perfil', onClick: function () {
+	                                                        React.createElement(_materialUiMenuItem2['default'], { value: 2, primaryText: 'Ver Proyecto', onClick: function () {
 	                                                                return _this.verproyecto(item.id);
 	                                                            } }),
 	                                                        React.createElement(_materialUiMenuItem2['default'], { value: 3, primaryText: 'Eliminar' })
@@ -76357,6 +76356,8 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
@@ -76401,7 +76402,8 @@
 	    width: '100%',
 	    height: '100%',
 	    display: 'flex',
-	    alignItems: 'center'
+	    alignItems: 'center',
+	    backgroundColor: "rgb(168,229,251)"
 	};
 
 	var itemcolor = {
@@ -76443,17 +76445,24 @@
 	            mipost: false,
 	            file: '',
 	            open: false,
-	            archivos: []
-
+	            usuarioslist: [],
+	            opencolaborador: false,
+	            archivos: [],
+	            colaboradorselected: '',
+	            nombrecolaborador: '',
+	            colaboradoreslist: []
 	        };
 	        this.getFileName = this.getFileName.bind(this);
 	        this.subirdocumento = this.subirdocumento.bind(this);
 	        this.descargardocumento = this.descargardocumento.bind(this);
+	        this.cambiaropcion = this.cambiaropcion.bind(this);
+	        this.anadircolaborador = this.anadircolaborador.bind(this);
 	    }
 
 	    _createClass(VerProyecto, [{
 	        key: 'componentWillMount',
 	        value: function componentWillMount() {
+	            var _this = this;
 
 	            var padre = this;
 	            firebase.auth().onAuthStateChanged(function (user) {
@@ -76486,6 +76495,38 @@
 
 	                padre.setState({ titulo: messages.nombre, descripcion: messages.descripcion, nombrecreador: messages.nombrecreador, archivos: newState });
 	            });
+
+	            var ref = firebase.database().ref().child('usuarios');
+	            ref.on('value', function (snapshot) {
+	                var messages = snapshot.val();
+	                var miembros = [];
+	                for (var cadauno in messages) {
+
+	                    miembros.push({
+	                        id: cadauno,
+	                        nombre: messages[cadauno].nombre
+	                    });
+	                }
+	                padre.setState({ usuarioslist: miembros });
+	            });
+
+	            var r = firebase.database().ref().child('proyectos/' + this.state.idproyecto + '/colaboradores');
+	            r.on('value', function (snapshot) {
+	                var messages = snapshot.val();
+	                var colaboradores = [];
+	                for (var cadauno in messages) {
+
+	                    if (cadauno == _this.state.idactivo) {
+	                        console.log('ocurrio');
+	                        padre.setState({ mipost: true });
+	                    }
+	                    colaboradores.push({
+	                        id: cadauno,
+	                        nombre: messages[cadauno].nombre
+	                    });
+	                }
+	                padre.setState({ colaboradoreslist: colaboradores });
+	            });
 	        }
 	    }, {
 	        key: 'getFileName',
@@ -76496,12 +76537,17 @@
 	    }, {
 	        key: 'handleClose',
 	        value: function handleClose() {
-	            this.setState({ open: false });
+	            this.setState({ open: false, opencolaborador: false });
 	        }
 	    }, {
 	        key: 'handleOpen',
 	        value: function handleOpen() {
 	            this.setState({ open: true });
+	        }
+	    }, {
+	        key: 'openColaborador',
+	        value: function openColaborador() {
+	            this.setState({ opencolaborador: true });
 	        }
 	    }, {
 	        key: 'subirdocumento',
@@ -76518,9 +76564,24 @@
 	            window.open(link, '_blank');
 	        }
 	    }, {
+	        key: 'cambiaropcion',
+	        value: function cambiaropcion(e) {
+	            var _setState;
+
+	            var texto = document.getElementsByName('colaboradorselected');
+	            this.setState((_setState = {}, _defineProperty(_setState, e.target.name, e.target.value), _defineProperty(_setState, 'nombrecolaborador', texto[0].options[texto[0].selectedIndex].text), _setState));
+	        }
+	    }, {
+	        key: 'anadircolaborador',
+	        value: function anadircolaborador() {
+
+	            (0, _configJsx.añadircolaborador)(this.state.colaboradorselected, this.state.idproyecto, this.state.nombrecolaborador);
+	            this.setState({ opencolaborador: false });
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this = this;
+	            var _this2 = this;
 
 	            return React.createElement(
 	                _materialUiStylesMuiThemeProvider2['default'],
@@ -76552,16 +76613,37 @@
 	                                'Autor: ' + this.state.nombrecreador
 	                            ),
 	                            React.createElement(
-	                                'h6',
-	                                null,
-	                                'Colaboradores:'
+	                                'div',
+	                                { style: { display: 'flex', flexDirection: 'row' } },
+	                                React.createElement(
+	                                    'h6',
+	                                    null,
+	                                    'Colaboradores :'
+	                                ),
+	                                this.state.colaboradoreslist.map(function (item) {
+
+	                                    return React.createElement(
+	                                        'h6',
+	                                        { key: item.id },
+	                                        ' ',
+	                                        item.nombre,
+	                                        ' - '
+	                                    );
+	                                })
 	                            ),
 	                            React.createElement(
 	                                _materialUiCard.CardActions,
 	                                null,
-	                                this.state.mipost == true ? React.createElement(_materialUiRaisedButton2['default'], { label: 'Subir Archivo', primary: true, onClick: function () {
-	                                        return _this.handleOpen();
-	                                    } }) : null
+	                                this.state.mipost == true ? React.createElement(
+	                                    'div',
+	                                    { style: { display: 'flex', flexDirection: 'row' } },
+	                                    React.createElement(_materialUiRaisedButton2['default'], { label: 'Subir Archivo', primary: true, onClick: function () {
+	                                            return _this2.handleOpen();
+	                                        } }),
+	                                    React.createElement(_materialUiRaisedButton2['default'], { label: 'Añadir Colaborador', style: { marginLeft: '5px' }, primary: true, onClick: function () {
+	                                            return _this2.openColaborador();
+	                                        } })
+	                                ) : null
 	                            )
 	                        )
 	                    ),
@@ -76576,10 +76658,42 @@
 	                        React.createElement('input', { type: 'file', id: 'documentselector', onChange: this.getFileName }),
 	                        React.createElement('br', null),
 	                        React.createElement(_materialUiFlatButton2['default'], { style: itemcolor, label: 'Cancelar', onClick: function () {
-	                                return _this.handleClose();
+	                                return _this2.handleClose();
+	                            }, backgroundColor: '#00bcd4', hoverColor: '#006775' }),
+	                        React.createElement(_materialUiFlatButton2['default'], { style: itemcolor, label: 'Aceptar', backgroundColor: '#00bcd4', hoverColor: '#006775', onClick: function () {
+	                                return _this2.subirdocumento();
+	                            } })
+	                    ),
+	                    React.createElement(
+	                        _materialUiDialog2['default'],
+	                        {
+	                            title: 'Buscar Colaborador',
+	                            modal: true,
+	                            open: this.state.opencolaborador
+	                        },
+	                        React.createElement('br', null),
+	                        React.createElement(
+	                            'select',
+	                            { className: 'selectfield', value: this.state.colaboradorselected, onChange: this.cambiaropcion, name: 'colaboradorselected' },
+	                            React.createElement(
+	                                'option',
+	                                { value: '' },
+	                                'Usuarios'
+	                            ),
+	                            this.state.usuarioslist.map(function (item) {
+	                                return React.createElement(
+	                                    'option',
+	                                    { key: item.nombre, value: item.id },
+	                                    item.nombre
+	                                );
+	                            })
+	                        ),
+	                        React.createElement('br', null),
+	                        React.createElement(_materialUiFlatButton2['default'], { style: itemcolor, label: 'Cancelar', onClick: function () {
+	                                return _this2.handleClose();
 	                            }, backgroundColor: '#00bcd4', hoverColor: '#006775' }),
 	                        React.createElement(_materialUiFlatButton2['default'], { style: itemcolor, label: 'Crear', backgroundColor: '#00bcd4', hoverColor: '#006775', onClick: function () {
-	                                return _this.subirdocumento();
+	                                return _this2.anadircolaborador();
 	                            } })
 	                    ),
 	                    React.createElement(
@@ -76593,16 +76707,29 @@
 	                                null,
 	                                'Archivos'
 	                            ),
-	                            this.state.archivos.map(function (item) {
-	                                return React.createElement(
-	                                    _materialUiIconButton2['default'],
-	                                    { key: item.id, style: iconbutton, iconStyle: styles.mediumIcon, onClick: function () {
-	                                            return _this.descargardocumento(item.link);
-	                                        }, tooltip: item.name },
-	                                    React.createElement(_materialUiSvgIconsActionDescription2['default'], null),
-	                                    ' '
-	                                );
-	                            }),
+	                            React.createElement(
+	                                'div',
+	                                { className: 'listadocumentos' },
+	                                this.state.archivos.map(function (item) {
+	                                    return React.createElement(
+	                                        'div',
+	                                        { key: item.id, style: { marginRight: "5%" } },
+	                                        React.createElement(
+	                                            _materialUiIconButton2['default'],
+	                                            { style: iconbutton, iconStyle: styles.mediumIcon, onClick: function () {
+	                                                    return _this2.descargardocumento(item.link);
+	                                                }, tooltip: item.name },
+	                                            React.createElement(_materialUiSvgIconsActionDescription2['default'], null),
+	                                            ' '
+	                                        ),
+	                                        React.createElement(
+	                                            'h6',
+	                                            null,
+	                                            item.name
+	                                        )
+	                                    );
+	                                })
+	                            ),
 	                            React.createElement(_materialUiCard.CardActions, null)
 	                        )
 	                    )

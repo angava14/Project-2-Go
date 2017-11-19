@@ -99,3 +99,16 @@
   justify-content: center;
   height: 150px;
   margin: 0% 20% 5% 20%; }
+
+.listadocumentos {
+  display: flex;
+  flex-direction: row; }
+
+.selectfield {
+  margin-top: 7%;
+  height: 50px;
+  width: 70%;
+  font-size: medium;
+  display: flex;
+  align-items: center;
+  justify-content: center; }

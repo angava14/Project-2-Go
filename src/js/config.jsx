@@ -147,3 +147,12 @@ export function uploadDocument(archivo , nombrearchivo , idcreador , idproyecto)
         });
         
 }
+
+
+export function añadircolaborador(idusuario , idproyecto , nombrecolaborador){
+   const messagesRef = firebase.database().ref().child('proyectos/'+idproyecto+"/colaboradores/"+idusuario);
+   const objeto = {
+       nombre : nombrecolaborador
+   }
+   messagesRef.update(objeto);
+}
